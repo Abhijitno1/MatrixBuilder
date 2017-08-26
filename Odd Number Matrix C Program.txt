@@ -1,0 +1,137 @@
+A magic square is an n x n matrix, where each of the integers
+1, 2, 3 , n 2 , appear exactly once and the sums of every row
+column, and diagonal are equal. It has been proved that for
+even values of n, no magic square exists. Here is a magic square
+for n = 3:
+8 1 6
+3 5 7
+4 9 2
+Figure 8.7 Magic square
+The following is a procedure for constructing an n x n magic
+square for any odd integer n.
+Place initial number in the middle of the top row. Then after
+integer k has been placed, move up one row and one column
+//A Tryst with Arrays 283
+to the right to place the next integer k + 1, unless one of the
+following occurs:
+(a) If a move takes you above the top row in the j * column,
+move to the bottom of the j * column and place the
+integer there.
+(b) If a move takes you outside to the right of the square in
+the i* row, place the integer in the i* row at the left side.
+(c) If a move takes you to an already filled square or if you
+move out of the square at the upper-right-hand corner,
+place k + 1 immediately below k.
+Write a program to construct a magic square for any odd integer
+n.
+
+=================================================================================================
+#include "conio.h"
+int a[81];
+main()
+{
+int sr = 5, sc = 30, er, ec;
+int n, num, row, col, i, j, I, k, sum = 0 ;
+printf ("Enter the size of odd square matrix");
+scant ("%d", & n ) ;
+printf ("Enter initial number of the series");
+scant ("%d", &num);
+clrscr();
+gotoxy(35,1);
+er = sr + n * 2 ; /* ending row */
+ec = sc + n * 3 ; /* ending column */
+drawbox (sr, sc, er, e c ) ;
+i = 1 ; / * top row */
+j = 1 + n / 2 ; /* middle of top row*/
+for (k = 0 ; k < n * n; k++)
+//328 Exploring C
+I* find row & col where number is to be placed on screen */
+row = (sr + 1) + ( i - 1 ) * 2 ;
+col = (sc + 1 ) + (j - 1 ) * 3 ;
+gotoxy (col, row);
+printf ("%d", num);
+I* calculate position where number is to be placed in array */
+l = ( i - 1 ) * 0 + ( j - 1 ) ;
+a[l] = num;
+num++;
+I*go one row up*/
+i~;
+I* go one column to right */
+I* check if we reach outside the square */
+if (i == 0)
+i = n;
+i f ( i = = n + 1 )
+i = 1 ;
+if (j == 0)
+j = n;
+if (j == n + 1 )
+j = i ;
+l = ( i - 1 ) * n + ( j - 1 ) ;
+I* if square already filled */
+if (a|l] 1=0)
+//A Tryst with Arrays 329
+I* increment row by 2, decrement col by 1 */
+i + = 2 ;
+j - ;
+I* adjust row and col if outside the box */
+i f ( i > n )
+i = i - n ;
+i f ( j = = 0 )
+j = n;
+}
+}
+for (i = 0 ; i <= (n * (n - 1 ) ) ; i += n)
+sum = sum + a[i];
+gotoxy (sc, er + 2 ) ;
+printf ("Horizontal, Vertical & Diagonal sum = %d", sum)
+}
+/* draw squares into which numbers are to be displayed */
+drawbox (sr, sc, er, ec)
+int sr, sc, er, ec;
+{
+int i, j ;
+for (j = sr; j <= er; j+= 2)
+{
+for (i = sc + 1 ; i < ec; i++)
+{
+gotoxy (i, j ) ;
+printf ("%c", 196);
+}
+}
+for (i = sc; i <= ec; i += 3)
+//330 Exploring C
+for (j = sr + 1 ; j < e r ; j + + )
+{
+gotoxy (i, j ) ;
+printf ("%c". 179);
+}
+for (i = sc + 3 ; i < ec; i += 3)
+{
+gotoxy (i, s r ) ;
+printf ("%c", 194);
+gotoxy ( i , e r ) ;
+printf ("%c", 193);
+for (j = sr + 2 ; j < er; j += 2)
+{
+gotoxy ( s c , j ) ;
+printf ("%c",195);
+gotoxy ( e c , j ) ;
+printf ("%c", 180);
+for (j = sr + 2 ; j < er; j += 2)
+{
+for (i = sc + 3 ; i < ec; i += 3 )
+{
+gotoxy (i, j ) ;
+printf ("%c", 197);
+}
+}
+gotoxy (sc, s r ) ;
+printf ("%c", 2 1 8 ) ;
+gotoxy (ec, e r ) ;
+printf ("%c", 2 1 7 ) ;
+//A Tryst with Arrays 331
+gotoxy (ec, s r ) ;
+printf ("%c", 191);
+gotoxy (sc, e r ) ;
+printf ("%c",192);
+}

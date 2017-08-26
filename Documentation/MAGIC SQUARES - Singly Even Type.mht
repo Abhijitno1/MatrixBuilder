@@ -1,0 +1,248 @@
+From: "Saved by Internet Explorer 11"
+Subject: MAGIC SQUARES - Singly Even Type
+Date: Sat, 26 Aug 2017 15:12:03 +0530
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----=_NextPart_000_0000_01D31E7D.AC56A0A0"
+X-MimeOLE: Produced By Microsoft MimeOLE V6.1.7601.23651
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0000_01D31E7D.AC56A0A0
+Content-Type: text/html;
+	charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.1728.org/magicsq3.htm
+
+<!DOCTYPE HTML>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" =
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><HTML=20
+xmlns=3D"http://www.w3.org/1999/xhtml"><!-- AUTHOR - ROBERT GAGNON =
+--><HEAD><META=20
+content=3D"IE=3D11.0000" http-equiv=3D"X-UA-Compatible">
+     <TITLE>MAGIC SQUARES - Singly Even Type</TITLE>     =20
+<META http-equiv=3D"Content-Type" content=3D"text/html; =
+charset=3Dwindows-1252"><LINK=20
+href=3D"http://www.1728.org/magicsqr.css" rel=3D"stylesheet" =
+type=3D"text/css"=20
+charset=3D"UTF-8" meta=3D"">=20
+<META name=3D"Description" content=3D"Magic Squares, magic sum formula, =
+calculating singly even magic squares">=20
+
+<META name=3D"Keywords" content=3D"Magic Squares, magic sum formula, =
+calculating singly even magic squares">=20
+ =20
+<SCRIPT src=3D""></SCRIPT>
+
+<META name=3D"GENERATOR" content=3D"MSHTML 11.00.9600.18666"></HEAD>=20
+<BODY>
+<DIV id=3D"wrapper">
+<H1>Magic Squares (Part 3)<BR></H1>
+<P>Singly even magic squares are one of the three types of magic square.
+<P> The other two types are:<BR>=95 <A=20
+href=3D"http://www.1728.org/magicsq1.htm"><EM>odd</EM></A> (n=3D3, 5, 7, =
+9, 11,=20
+etc.) and<BR>=95 <A href=3D"http://www.1728.org/magicsq2.htm"><EM>doubly =
+
+even</EM></A> (multiple of 4 where n=3D4, 8, 12, 16, 20, etc.)<BR>
+<P><EM></EM></P>
+<P><EM></EM></P>
+<CENTER>
+<SCRIPT type=3D"text/javascript"><!--=0A=
+google_ad_client =3D "ca-pub-5439459074965585";=0A=
+/* magicsq3.htm */=0A=
+google_ad_slot =3D "1451653821";=0A=
+google_ad_width =3D 300;=0A=
+google_ad_height =3D 250;=0A=
+//-->=0A=
+</SCRIPT>
+=20
+<SCRIPT src=3D"" type=3D"text/javascript"></SCRIPT>
+ </CENTER>
+<H4>Singly Even Magic Squares</H4>
+<P>Well it seems we have encountered another phrase that isn't very =
+descriptive.=20
+ Basically, "singly even" means divisible by 2 but not by four.  A =
+formula for=20
+generating singly even numbers is (n*4) + 2, which generates the numbers =
+2, 6,=20
+10, 14, 18, 22, 26, 30 and so on.  There is no magic square that can be=20
+constructed in a 2 by 2 square but singly even magic squares can be =
+constructed=20
+for n=3D6, 10, 14 and so on.   =20
+<P>Singly even magic squares are the most difficult to construct and so =
+let's=20
+start with the smallest possible one where n =3D 6.<BR>To get the sum, =
+we'll use=20
+the formula that we previously used:=20
+<CENTER><IMG src=3D""></CENTER>
+<P>So, the sum for n=3D6 is 111.<BR>
+<CENTER>
+<SCRIPT type=3D"text/javascript"><!--=0A=
+google_ad_client =3D "ca-pub-5439459074965585";=0A=
+/* magicsq3.htm */=0A=
+google_ad_slot =3D "1451653821";=0A=
+google_ad_width =3D 300;=0A=
+google_ad_height =3D 250;=0A=
+//-->=0A=
+</SCRIPT>
+=20
+<SCRIPT src=3D"" type=3D"text/javascript"></SCRIPT>
+ </CENTER>
+<P>The first step is to break the square into four smaller, =
+equally-sized=20
+squares.  So, for constructing a 6 by 6 magic square we start with four =
+3 by 3=20
+squares.  We then construct four magic squares in a pattern indicated =
+here:=20
+<CENTER><IMG src=3D""></CENTER>
+<P>Basically, this means that in section 'A' we will build a magic =
+square with=20
+the numbers 1 through 9, in section 'B' the magic square will start with =
+10 and=20
+end with 18, section 'C' will have the numbers 19 through 27 and section =
+'D'=20
+goes from 28 through 36.  So, when we finish this step, the square looks =
+like=20
+this:=20
+<CENTER><IMG src=3D""></CENTER>
+<P>Well, you probably noticed that six numbers on the left side of the =
+square=20
+have been highlighted in red or blue and that's because there is still =
+some more=20
+work to be done on this magic square.<BR>In this case, the "red" numbers =
+have to=20
+be moved where the "blue" numbers are and vice versa.  After doing this, =
+the=20
+square should now look like this:=20
+<CENTER><IMG src=3D""></CENTER>
+<P> Yes, finally we are done and all rows, columns and both diagonals =
+sum to=20
+111.
+<P><BR>
+<P>
+<CENTER>
+<SCRIPT type=3D"text/javascript"><!--=0A=
+google_ad_client =3D "ca-pub-5439459074965585";=0A=
+/* magicsq3.htm */=0A=
+google_ad_slot =3D "1451653821";=0A=
+google_ad_width =3D 300;=0A=
+google_ad_height =3D 250;=0A=
+//-->=0A=
+</SCRIPT>
+=20
+<SCRIPT src=3D"" type=3D"text/javascript"></SCRIPT>
+ </CENTER>
+<P>Next, we'll move on to building a 10 by 10 square.  The rules about =
+building=20
+four n =F7 2 squares in the "ABCD" pattern still apply but if you =
+notice, in the=20
+left side square, the numbers that need shifting make up a different =
+pattern=20
+from the 6 by 6 square.<BR>  The numbers on the left side that require =
+shifting=20
+are one column wider and for the first time we have a right hand column =
+to deal=20
+with.<BR>
+<CENTER><IMG src=3D""></CENTER>
+<P>The square on the right side is the completed square after all those =
+numbers=20
+have been shifted and all rows, columns and diagonals sum to 505.
+<P>We can see that the pattern for the cells that need to be shifted is =
+now=20
+forming a <I>very</I> predictable pattern.<BR>Perhaps by building a 14 =
+by 14=20
+magic square we could see if the pattern continues in the same fashion.
+<P>
+<CENTER><IMG src=3D""></CENTER>
+<P>Comparing this to the 10 by 10 square, we can see the pattern is now =
+quite=20
+simple.  The cells that require shifting for the 14 by 14 square are one =
+column=20
+greater than the 10 by 10 square.  The magic sum for this square is =
+1,379.
+<P>To make absolutely sure that the pattern for the shifted cells =
+remains the=20
+same, let's construct a singly even magic square for n=3D30 which will =
+have a=20
+magic sum of 13,515.<BR>The square after the first step is illustrated =
+here:=20
+<CENTER><IMG src=3D""></CENTER>
+<P>After shifting the cells, the completed magic square now looks like =
+this:<BR>
+<CENTER><IMG src=3D""></CENTER>
+<P>To help you identify the shifted cells, we have highlighted these in =
+color in=20
+the "before" <EM>and</EM> "after" graphics.<BR>Now that you are very =
+sure of how=20
+to construct singly even magic squares, you can go on to create ones for =
+n=3D26,=20
+n=3D34 or a great many other sizes.=20
+<H2><A href=3D"http://www.1728.org/index.htm">Return To Home =
+Page</A></H2>
+<H2>Copyright =A9 1999 - =20
+<SCRIPT> =0A=
+var xright=3Dnew Date;=0A=
+document.writeln(xright.getFullYear());=0A=
+</SCRIPT>
+ &nbsp; &nbsp; &nbsp; 1728 Software Systems </H2>
+<P><BR>
+<P></P></DIV></BODY></HTML>
+
+------=_NextPart_000_0000_01D31E7D.AC56A0A0
+Content-Type: text/css;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.1728.org/magicsqr.css
+
+body {
+	font: 1em/normal arial, sans-serif; margin: 50px 0px; padding: 0px; =
+text-align: left; color: rgb(0, 0, 153); font-size-adjust: none; =
+font-stretch: normal;
+}
+#wrapper {
+	margin: 0px auto; padding: 15px; text-align: left; color: rgb(153, 0, =
+0); min-width: 300px; max-width: 780px;
+}
+h1 {
+	font: bold 2.5em/1.5em arial, sans-serif; text-align: center; color: =
+rgb(153, 0, 0); letter-spacing: 0.1em; text-decoration: underline; =
+word-spacing: 0.2em; font-size-adjust: none; font-stretch: normal;
+}
+h2 {
+	font: bold 1em/1.5em arial, sans-serif; text-align: center; color: =
+rgb(0, 0, 153); letter-spacing: 0.1em; word-spacing: 0.2em; =
+font-size-adjust: none; font-stretch: normal;
+}
+h3 {
+	text-align: center;
+}
+h4 {
+	font: bold 1.5em/1.5em arial, sans-serif; text-align: center; color: =
+rgb(153, 0, 0); letter-spacing: 0.1em; text-decoration: underline; =
+word-spacing: 0.2em; font-size-adjust: none; font-stretch: normal;
+}
+h5 {
+	font: bold 1.5em/2em arial, sans-serif; text-align: center; color: =
+rgb(0, 0, 153); letter-spacing: 0.1em; text-decoration: underline; =
+word-spacing: 0.2em; font-size-adjust: none; font-stretch: normal;
+}
+body img {
+	margin-right: auto; margin-left: auto; display: block;
+}
+p {
+	font: 1em/normal arial, sans-serif; text-align: left; color: rgb(0, 0, =
+102); letter-spacing: 0.02em; word-spacing: 0.1em; font-size-adjust: =
+none; font-stretch: normal;
+}
+img {
+	margin-bottom: 2em; display: block;
+}
+a {
+	font: 1em/1.5em arial, sans-serif; text-align: center; color: rgb(0, 0, =
+153); letter-spacing: 0.1em; text-decoration: underline; word-spacing: =
+0.2em; font-size-adjust: none; font-stretch: normal;
+}
+
+------=_NextPart_000_0000_01D31E7D.AC56A0A0--

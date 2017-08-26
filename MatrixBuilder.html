@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Matrix Builder</title>
+<style>
+table#tblResult, #tblResult td {
+	border: 1px solid black;
+}
+#tblResult td {
+	width: 30px;
+	height: 30px;
+	text-align: center;
+}
+#lblResult {
+	visibility: hidden;
+}
+</style>
+</head>
+<body>
+<h1>Build a table</h1>
+<table>
+<tr>
+<td>Enter a number of rows/columns:</td><td><input type='number' id='txtRank' /></td> 
+</tr>
+<tr>
+<td>Enter the initial number:</td><td><input type='number' id='txtInitNum' /></td> 
+</tr>
+<tr><td colspan='2' style='text-align:right'>
+<button id='btnBuild'>Build Now</button>
+</td></tr>
+</table>
+<hr />
+<p>
+<table id='tblResult'></table>
+</p>
+<p id='lblResult'>The sum of elements within any row or column or diagonal is <span id='spanSum'></span>.</p>
+<script type='text/javascript'>
+document.getElementById('btnBuild').onclick = buildMatrix;
+
+function buildMatrix() {
+	var tblResult = document.getElementById('tblResult');  
+	var rank = document.getElementById('txtRank').value;
+	var initNum = document.getElementById('txtInitNum').value;
+	rank = parseInt(rank); initNum = parseInt(initNum);  
+	
+	var matrixBuilder;	
+	if (rank % 2 == 1) { 
+		matrixBuilder = new OddMatrixBuilder(tblResult, rank, initNum);
+	}
+	if (rank == 4) {
+		matrixBuilder = new Rank4MatrixBuilder(tblResult, rank, initNum);
+	}
+	if (matrixBuilder === undefined) {
+		alert('Currently only odd ranked matrix and matrix with Rank 4 are supported');
+		return;
+	}
+
+	drawTable(tblResult, rank);
+	matrixBuilder.fillNumbers();
+	displayResult(tblResult, rank);
+}
+
+function drawTable(tblResult, rank) {
+	var rowsNum = colsNum = rank;
+	tblResult.innerHTML = '';
+
+	for (i=0; i<rowsNum; i++) {
+		var newRow = document.createElement('TR');
+		tblResult.appendChild(newRow);
+		for (j=0; j<colsNum; j++) {
+			var newCell = document.createElement('TD');
+			newRow.appendChild(newCell);
+			//newCell.innerHTML = i.toString() + j.toString(); 
+		}
+	}
+}
+
+function displayResult(tblResult, rank) {
+	var sum = 0;
+	for (var i=0; i< rank; i++)
+		sum += parseInt(tblResult.rows[0].cells[i].innerText);
+	
+	document.getElementById('lblResult').style.visibility = 'visible';
+	document.getElementById('spanSum').innerText = sum;
+}
+
+function OddMatrixBuilder(tblResult, rank, initNum) {
+	this.fillNumbers = function() {
+		var lastNum = initNum + rank * rank - 1;
+		var curX = rank - 1;
+		var curY = parseInt(rank / 2);
+	  
+		for (var curNum = initNum; curNum<=lastNum; curNum++) {	
+			tblResult.rows[curX].cells[curY].innerText = curNum;
+			curX++; curY++;
+			if (curX == rank && curY == rank) {
+				curX -= 2; curY--;
+			}
+			else if (curX == rank)
+				curX = 0;
+			else if (curY == rank)
+				curY = 0;
+			else if (tblResult.rows[curX].cells[curY].innerText != "") {
+				curX -= 2; curY--;
+			}
+		}
+	}
+};
+
+
+function Rank4MatrixBuilder(tblResult, rank, initNum) {
+	this.fillNumbers = function() {
+		var curNum = initNum; 	
+		for (curX=0; curX<rank; curX++) {
+			for (curY=0; curY<rank; curY++) {
+				tblResult.rows[curX].cells[curY].innerText = curNum++;
+			}
+		}
+		inverseDiagonals();
+	};
+	
+	function inverseDiagonals() {
+		var begX = begY = 0;
+		var endX = endY = rank - 1;		
+		while (begX < endX && begY < endY) {
+			console.log('swap ' + begX + begY + ' - ' + endX + endY);
+			swapNumbers(begX, begY, endX, endY);
+			begX++; begY++; endX--; endY--;
+		}
+		
+		begX = 0; begY = rank - 1;
+		endX = rank - 1; endY = 0;
+		while (begX < endX && begY > endY) {
+			console.log('swap ' + begX + begY + ' - ' + endX + endY);
+			swapNumbers(begX, begY, endX, endY);
+			begX++; begY--; endX--; endY++;
+		}
+	}
+	
+	function swapNumbers(oneX, oneY, twoX, twoY) {
+		var val = tblResult.rows[oneX].cells[oneY].innerText;
+		tblResult.rows[oneX].cells[oneY].innerText = tblResult.rows[twoX].cells[twoY].innerText;
+		tblResult.rows[twoX].cells[twoY].innerText = val;
+	}
+};
+
+</script>
+</body>
+</html> 
