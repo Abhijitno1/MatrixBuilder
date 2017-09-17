@@ -44,19 +44,22 @@ function buildMatrix() {
 	var initNum = document.getElementById('txtInitNum').value;
 	rank = parseInt(rank); initNum = parseInt(initNum);  
 	
-	var matrixBuilder;	
-	if (rank % 2 == 1) { 
-		matrixBuilder = new OddMatrixBuilder(tblResult, rank, initNum);
+	var matrixBuilder;
+	if (rank == 2) {
+		alert("A 2 X 2 magic square does not exist.");
+		return;
 	}
-	/*if (rank == 4) {
+	else if (rank == 4) {
 		matrixBuilder = new Rank4MatrixBuilder(tblResult, rank, initNum);
-	}*/
+	}
 	else if (rank % 4 == 0) {
 		matrixBuilder = new DoublyEvenMatrixBuilder(tblResult, rank, initNum);
 	}
-	if (matrixBuilder === undefined) {
-		alert('Currently only odd ranked matrix and doubly even rank matrix are supported');
-		return;
+	else if (rank % 2 == 0) {
+		matrixBuilder = new SinglyEvenMatrixBuilder(tblResult, rank, initNum);
+	}
+	else if (rank % 2 == 1) { 
+		matrixBuilder = new OddMatrixBuilder(tblResult, rank, initNum);
 	}
 
 	drawTable(tblResult, rank);
@@ -90,7 +93,7 @@ function OddMatrixBuilder(tblResult, rank, initNum) {
 	this.fillNumbers = function() {
 		var lastNum = initNum + rank * rank - 1;
 		var curX = rank - 1;
-		var curY = parseInt(rank / 2);
+		var curY = Math.floor(rank / 2);
 	  
 		for (var curNum = initNum; curNum<=lastNum; curNum++) {	
 			tblResult.rows[curX].cells[curY].innerText = curNum;
@@ -170,6 +173,124 @@ function DoublyEvenMatrixBuilder(tblResult, rank, initNum) {
 			}			
 		}		
 	}
+}
+
+//Matrix generator where number of rows/columns is divisible by 2 (but not by 4)
+function SinglyEvenMatrixBuilder(tblResult, rank, initNum) {
+	this.fillNumbers = function() {
+		var halfEnd = Math.floor(rank / 2);
+		var matrixBuilder = new OddSubMatrixBuilder(tblResult, halfEnd);
+		matrixBuilder.fillNumbers(halfEnd, 0, initNum);
+		initNum += halfEnd * halfEnd;
+		matrixBuilder.fillNumbers(0, halfEnd, initNum);
+		initNum += halfEnd * halfEnd;
+		matrixBuilder.fillNumbers(halfEnd, halfEnd, initNum);
+		initNum += halfEnd * halfEnd;
+		matrixBuilder.fillNumbers(0, 0, initNum);
+
+		colorizeRightEnd(halfEnd);
+		colorizeLeftEnd(halfEnd);
+		/*
+		for (var row = 0; row < rank; row++) {
+			for (var col = 0; col < rank; col++) {
+				if (row < halfEnd) {
+					if (col < halfEnd)
+						tblResult.rows[row].cells[col].innerText = "D";
+					else
+						tblResult.rows[row].cells[col].innerText = "B";
+				}
+				else {
+					if (col < halfEnd)
+						tblResult.rows[row].cells[col].innerText = "A";
+					else
+						tblResult.rows[row].cells[col].innerText = "C";
+				}
+			}
+		}
+		*/
+	};
+
+	function colorizeRightEnd(subMatrixRank) {
+		var beginCol = subMatrixRank + Math.round(subMatrixRank/2) + 1;
+		var endCol = rank - 1;
+		var beginRowTop = 0;
+		var endRowTop = subMatrixRank - 1;
+		var beginRowBottom = endRowTop + 1;
+		var endRowBottom = rank - 1; 
+
+		for (var col = beginCol; col <= endCol; col++) {
+			for (var topRow = beginRowTop, bottomRow = beginRowBottom; topRow <= endRowTop; topRow++, bottomRow++) {
+				tblResult.rows[topRow].cells[col].style.backgroundColor = "orange";
+				tblResult.rows[bottomRow].cells[col].style.backgroundColor = "orange";
+				swapCellText(tblResult.rows[topRow].cells[col], tblResult.rows[bottomRow].cells[col]);
+			}
+		}
+	}
+
+	function swapCellText(cellA, cellB) {
+		var temp = cellA.innerText;
+		cellA.innerText = cellB.innerText;
+		cellB.innerText = temp;
+	}	
+
+	function colorizeLeftEnd(subMatrixRank) {
+		var beginCol = 0;
+		var endCol = Math.floor(subMatrixRank/2) - 1;
+		var beginRowTop = 0;
+		var endRowTop = subMatrixRank - 1;
+		var beginRowBottom = endRowTop + 1;
+		var endRowBottom = rank - 1; 
+
+		for (var col = beginCol; col <= endCol; col++) {
+			for (var topRow = beginRowTop, bottomRow = beginRowBottom; topRow <= endRowTop; topRow++, bottomRow++) {
+				if (topRow == endCol + 1) {
+					//tblResult.rows[topRow].cells[col+1].style.backgroundColor = "orange";
+					//tblResult.rows[bottomRow].cells[col+1].style.backgroundColor = "orange";
+					swapCellText(tblResult.rows[topRow].cells[col+1], tblResult.rows[bottomRow].cells[col+1]);
+				}
+				else {
+					//tblResult.rows[topRow].cells[col].style.backgroundColor = "orange";
+					//tblResult.rows[bottomRow].cells[col].style.backgroundColor = "orange";
+					swapCellText(tblResult.rows[topRow].cells[col], tblResult.rows[bottomRow].cells[col]);
+				}
+			}
+		}
+	}
+}
+
+function OddSubMatrixBuilder(tblResult, rank) {
+	this.fillNumbersTest = function(startRow, startCol, initNum) {
+		var endRow = startRow + rank - 1;
+		var endCol = startCol + rank - 1;
+		for (var row = startRow; row <= endRow; row++) {
+			for (var col = startCol; col <= endCol; col++) {
+				tblResult.rows[row].cells[col].innerText = initNum++;
+			}
+		}
+	};
+
+	this.fillNumbers = function(startRow, startCol, initNum) {
+		var lastNum = initNum + rank * rank - 1;
+		var outX = startRow + rank; 
+		var outY = startCol + rank;
+		var curX = outX - 1;
+		var curY = startCol + Math.floor(rank / 2);
+	  
+		for (var curNum = initNum; curNum<=lastNum; curNum++) {	
+			tblResult.rows[curX].cells[curY].innerText = curNum;
+			curX++; curY++;
+			if (curX == outX && curY == outY) {
+				curX -= 2; curY--;
+			}
+			else if (curX == outX)
+				curX = startRow;
+			else if (curY == outY)
+				curY = startCol;
+			else if (tblResult.rows[curX].cells[curY].innerText != "") {
+				curX -= 2; curY--;
+			}
+		}
+	};
 }
 
 </script>
