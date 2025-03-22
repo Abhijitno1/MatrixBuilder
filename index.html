@@ -3,22 +3,55 @@
 <head>
 <title>Matrix Builder</title>
 <style>
-table#tblResult, #tblResult td {
-	border: 1px solid black;
+body {
+    height: 100vh;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+	text-align: center;
+}
+table#tblHeader {
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
 }
 #tblResult td {
-	width: 30px;
-	height: 30px;
-	text-align: center;
+	color: navy;
+    background-color: #fff;
+    border: 1px solid #000;
+	margin: 2px;
+	padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+}
+table#tblResult {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 #lblResult {
 	visibility: hidden;
+}
+button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: #4682b4;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+button:hover {
+    background-color: #5a9bd4;
 }
 </style>
 </head>
 <body>
 <h1>Build a Balanced Matrix</h1>
-<table>
+<table id='tblHeader'>
 <tr>
 <td>Enter a number of rows/columns:</td><td><input type='number' id='txtRank' /></td> 
 </tr>
@@ -27,6 +60,7 @@ table#tblResult, #tblResult td {
 </tr>
 <tr><td colspan='2' style='text-align:right'>
 <button id='btnBuild'>Build Now</button>
+<button id='btnVerify'>Verify Sum</button>
 </td></tr>
 </table>
 <hr />
@@ -37,6 +71,7 @@ table#tblResult, #tblResult td {
 
 <script type='text/javascript'>
 document.getElementById('btnBuild').onclick = buildMatrix;
+document.getElementById('btnVerify').onclick = verifyResult;
 
 function buildMatrix() {
 	var tblResult = document.getElementById('tblResult');  
@@ -86,6 +121,55 @@ function displayResult(tblResult, rank) {
 	
 	document.getElementById('lblResult').style.visibility = 'visible';
 	document.getElementById('spanSum').innerText = sum;
+}
+
+function verifyResult(tblResult, rank) {
+	var sum = 0, initSum;
+	//Getting sum of first row numbers
+	for (var i=0; i< rank; i++)
+		sum += parseInt(tblResult.rows[0].cells[i].innerText);
+	initSum = sum;
+	
+	//Verify same sum for rest of rows
+	sum = 0;
+	for (var row = 1; row < rank; row++) {
+		for (var col = 0; col < rank; col++)
+			sum += parseInt(tblResult.rows[row].cells[col].innerText);
+		if (sum != initSum) {
+			alert('Sum of row 1 did not match with sum for row ' + row);
+			return;			
+		}
+	}
+	
+	//Verify same sum for all columns
+	sum = 0;
+	for (var col = 0; col < rank; col++) {
+		for (var row = 0; row < rank; row++)
+			sum += parseInt(tblResult.rows[row].cells[col].innerText);
+		if (sum != initSum) {
+			alert('Sum of row 1 did not match with sum for column ' + col);
+			return;				
+		}
+	}
+
+	//Verify same sum for all diagonals
+	sum = 0;
+	for (var row = 0, col = 0; row < rank; row++, col++) {
+		sum += parseInt(tblResult.rows[row].cells[col].innerText);
+		if (sum != initSum) {
+			alert('Sum of row 1 did not match with sum for diagonal TL-BR');
+			return;				
+		}
+	}
+	sum = 0;
+	for (var row = 0, col = rank - 1; row < rank; row++, col--) {
+		sum += parseInt(tblResult.rows[row].cells[col].innerText);
+		if (sum != initSum) {
+			alert('Sum of row 1 did not match with sum for diagonal TR-BL');
+			return;				
+		}
+	}
+	alert('Sum of row 1 matches with sum for all rows, columns and diagonals');
 }
 
 //Matrix generator where number of rows/columns is odd 
@@ -220,8 +304,8 @@ function SinglyEvenMatrixBuilder(tblResult, rank, initNum) {
 
 		for (var col = beginCol; col <= endCol; col++) {
 			for (var topRow = beginRowTop, bottomRow = beginRowBottom; topRow <= endRowTop; topRow++, bottomRow++) {
-				tblResult.rows[topRow].cells[col].style.backgroundColor = "orange";
-				tblResult.rows[bottomRow].cells[col].style.backgroundColor = "orange";
+				//tblResult.rows[topRow].cells[col].style.backgroundColor = "orange";
+				//tblResult.rows[bottomRow].cells[col].style.backgroundColor = "orange";
 				swapCellText(tblResult.rows[topRow].cells[col], tblResult.rows[bottomRow].cells[col]);
 			}
 		}
