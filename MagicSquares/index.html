@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Matrix Builder</title>
+<style>
+body {
+    height: 100vh;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+	text-align: center;
+}
+table#tblHeader {
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
+}
+#tblResult td {
+	color: navy;
+    background-color: #fff;
+    border: 1px solid #000;
+	margin: 2px;
+	padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+}
+table#tblResult {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#lblResult {
+	visibility: hidden;
+}
+button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: #4682b4;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+button:hover {
+    background-color: #5a9bd4;
+}
+</style>
+</head>
+<body>
+<h1>Build a Balanced Matrix</h1>
+<table id='tblHeader'>
+<tr>
+<td>Enter a number of rows/columns:</td><td><input type='number' id='txtRank' /></td> 
+</tr>
+<tr>
+<td>Enter the initial number:</td><td><input type='number' id='txtInitNum' /></td> 
+</tr>
+<tr><td colspan='2' style='text-align:right'>
+<button id='btnBuild'>Build Now</button>
+<button id='btnVerify'>Verify Sum</button>
+</td></tr>
+</table>
+<hr />
+<p>
+<table id='tblResult'></table>
+</p>
+<p id='lblResult'>The sum of elements within any row or column or diagonal is <span id='spanSum'></span>.</p>
+
+<script type='text/javascript'>
+document.getElementById('btnBuild').onclick = buildMatrix;
+document.getElementById('btnVerify').onclick = verifyResult;
+
+function buildMatrix() {
+	var tblResult = document.getElementById('tblResult');  
+	var rank = document.getElementById('txtRank').value;
+	var initNum = document.getElementById('txtInitNum').value;
+	rank = parseInt(rank); initNum = parseInt(initNum);  
+	
+	var matrixBuilder;
+	if (rank == 2) {
+		alert("A 2 X 2 magic square does not exist.");
+		return;
+	}
+	else if (rank == 4) {
+		matrixBuilder = new Rank4MatrixBuilder(tblResult, rank, initNum);
+	}
+	else if (rank % 4 == 0) {
+		matrixBuilder = new DoublyEvenMatrixBuilder(tblResult, rank, initNum);
+	}
+	else if (rank % 2 == 0) {
+		matrixBuilder = new SinglyEvenMatrixBuilder(tblResult, rank, initNum);
+	}
+	else if (rank % 2 == 1) { 
+		matrixBuilder = new OddMatrixBuilder(tblResult, rank, initNum);
+	}
+
+	drawTable(tblResult, rank);
+	matrixBuilder.fillNumbers();
+	displayResult(tblResult, rank);
+}
+function drawTable(tblResult, rank) {
+	var rowsNum = colsNum = rank;
+	tblResult.innerHTML = '';
+	for (i=0; i<rowsNum; i++) {
+		var newRow = document.createElement('TR');
+		tblResult.appendChild(newRow);
+		for (j=0; j<colsNum; j++) {
+			var newCell = document.createElement('TD');
+			newRow.appendChild(newCell);
+			//newCell.innerHTML = i.toString() + j.toString(); 
+		}
+	}
+}
+function displayResult(tblResult, rank) {
+	var sum = 0;
+	for (var i=0; i< rank; i++)
+		sum += parseInt(tblResult.rows[0].cells[i].innerText);
+	
+	document.getElementById('lblResult').style.visibility = 'visible';
+	document.getElementById('spanSum').innerText = sum;
+}
+
+function verifyResult(tblResult, rank) {
+	var sum = 0, initSum;
+	//Getting sum of first row numbers
+	for (var i=0; i< rank; i++)
+		sum += parseInt(tblResult.rows[0].cells[i].innerText);
+	initSum = sum;
+	
+	//Verify same sum for rest of rows
+	sum = 0;
+	for (var row = 1; row < rank; row++) {
+		for (var col = 0; col < rank; col++)
+			sum += parseInt(tblResult.rows[row].cells[col].innerText);
+		if (sum != initSum) {
+			alert('Sum of row 1 did not match with sum for row ' + row);
+			return;			
+		}
+	}
+	
+	//Verify same sum for all columns
+	sum = 0;
+	for (var col = 0; col < rank; col++) {
+		for (var row = 0; row < rank; row++)
+			sum += parseInt(tblResult.rows[row].cells[col].innerText);
+		if (sum != initSum) {
+			alert('Sum of row 1 did not match with sum for column ' + col);
+			return;				
+		}
+	}
+
+	//Verify same sum for all diagonals
+	sum = 0;
+	for (var row = 0, col = 0; row < rank; row++, col++) {
+		sum += parseInt(tblResult.rows[row].cells[col].innerText);
+		if (sum != initSum) {
+			alert('Sum of row 1 did not match with sum for diagonal TL-BR');
+			return;				
+		}
+	}
+	sum = 0;
+	for (var row = 0, col = rank - 1; row < rank; row++, col--) {
+		sum += parseInt(tblResult.rows[row].cells[col].innerText);
+		if (sum != initSum) {
+			alert('Sum of row 1 did not match with sum for diagonal TR-BL');
+			return;				
+		}
+	}
+	alert('Sum of row 1 matches with sum for all rows, columns and diagonals');
+}
+
+//Matrix generator where number of rows/columns is odd 
+function OddMatrixBuilder(tblResult, rank, initNum) {
+	this.fillNumbers = function() {
+		var lastNum = initNum + rank * rank - 1;
+		var curX = rank - 1;
+		var curY = Math.floor(rank / 2);
+	  
+		for (var curNum = initNum; curNum<=lastNum; curNum++) {	
+			tblResult.rows[curX].cells[curY].innerText = curNum;
+			curX++; curY++;
+			if (curX == rank && curY == rank) {
+				curX -= 2; curY--;
+			}
+			else if (curX == rank)
+				curX = 0;
+			else if (curY == rank)
+				curY = 0;
+			else if (tblResult.rows[curX].cells[curY].innerText != "") {
+				curX -= 2; curY--;
+			}
+		}
+	}
+}
+
+//Matrix generator where number of rows/columns is 4
+function Rank4MatrixBuilder(tblResult, rank, initNum) {
+	this.fillNumbers = function() {
+		var curNum = initNum; 	
+		for (curX=0; curX<rank; curX++) {
+			for (curY=0; curY<rank; curY++) {
+				tblResult.rows[curX].cells[curY].innerText = curNum++;
+			}
+		}
+		inverseDiagonals();
+	};
+	
+	function inverseDiagonals() {
+		var begX = begY = 0;
+		var endX = endY = rank - 1;		
+		while (begX < endX && begY < endY) {
+			console.log('swap ' + begX + begY + ' - ' + endX + endY);
+			swapNumbers(begX, begY, endX, endY);
+			begX++; begY++; endX--; endY--;
+		}
+		
+		begX = 0; begY = rank - 1;
+		endX = rank - 1; endY = 0;
+		while (begX < endX && begY > endY) {
+			console.log('swap ' + begX + begY + ' - ' + endX + endY);
+			swapNumbers(begX, begY, endX, endY);
+			begX++; begY--; endX--; endY++;
+		}
+	}
+	
+	function swapNumbers(oneX, oneY, twoX, twoY) {
+		var val = tblResult.rows[oneX].cells[oneY].innerText;
+		tblResult.rows[oneX].cells[oneY].innerText = tblResult.rows[twoX].cells[twoY].innerText;
+		tblResult.rows[twoX].cells[twoY].innerText = val;
+	}
+}
+
+//Matrix generator where number of rows/columns is divisible by 4
+function DoublyEvenMatrixBuilder(tblResult, rank, initNum) {
+	this.fillNumbers = function() {
+		var firstMark = rank / 4, secondMark = rank - rank / 4;
+		var lastNum = initNum + rank * rank - 1;
+
+		for (var row = 0; row < rank; row++) {
+			if (row < firstMark || row >= secondMark) {
+				for (var col = 0; col < rank; col++) {
+					if (col < firstMark || col >= secondMark)	
+						tblResult.rows[row].cells[col].innerText = initNum;
+					else
+						tblResult.rows[row].cells[col].innerText = lastNum;
+					initNum++; lastNum--;
+				}
+			}
+			else {
+				for (var col = 0; col < rank; col++) {
+					tblResult.rows[row].cells[col].innerText = lastNum;
+					initNum++; lastNum--;
+				}
+			}			
+		}		
+	}
+}
+
+//Matrix generator where number of rows/columns is divisible by 2 (but not by 4)
+function SinglyEvenMatrixBuilder(tblResult, rank, initNum) {
+	this.fillNumbers = function() {
+		var halfEnd = Math.floor(rank / 2);
+		var matrixBuilder = new OddSubMatrixBuilder(tblResult, halfEnd);
+		matrixBuilder.fillNumbers(halfEnd, 0, initNum);
+		initNum += halfEnd * halfEnd;
+		matrixBuilder.fillNumbers(0, halfEnd, initNum);
+		initNum += halfEnd * halfEnd;
+		matrixBuilder.fillNumbers(halfEnd, halfEnd, initNum);
+		initNum += halfEnd * halfEnd;
+		matrixBuilder.fillNumbers(0, 0, initNum);
+
+		colorizeRightEnd(halfEnd);
+		colorizeLeftEnd(halfEnd);
+		/*
+		for (var row = 0; row < rank; row++) {
+			for (var col = 0; col < rank; col++) {
+				if (row < halfEnd) {
+					if (col < halfEnd)
+						tblResult.rows[row].cells[col].innerText = "D";
+					else
+						tblResult.rows[row].cells[col].innerText = "B";
+				}
+				else {
+					if (col < halfEnd)
+						tblResult.rows[row].cells[col].innerText = "A";
+					else
+						tblResult.rows[row].cells[col].innerText = "C";
+				}
+			}
+		}
+		*/
+	};
+
+	function colorizeRightEnd(subMatrixRank) {
+		var beginCol = subMatrixRank + Math.round(subMatrixRank/2) + 1;
+		var endCol = rank - 1;
+		var beginRowTop = 0;
+		var endRowTop = subMatrixRank - 1;
+		var beginRowBottom = endRowTop + 1;
+		var endRowBottom = rank - 1; 
+
+		for (var col = beginCol; col <= endCol; col++) {
+			for (var topRow = beginRowTop, bottomRow = beginRowBottom; topRow <= endRowTop; topRow++, bottomRow++) {
+				//tblResult.rows[topRow].cells[col].style.backgroundColor = "orange";
+				//tblResult.rows[bottomRow].cells[col].style.backgroundColor = "orange";
+				swapCellText(tblResult.rows[topRow].cells[col], tblResult.rows[bottomRow].cells[col]);
+			}
+		}
+	}
+
+	function swapCellText(cellA, cellB) {
+		var temp = cellA.innerText;
+		cellA.innerText = cellB.innerText;
+		cellB.innerText = temp;
+	}	
+
+	function colorizeLeftEnd(subMatrixRank) {
+		var beginCol = 0;
+		var endCol = Math.floor(subMatrixRank/2) - 1;
+		var beginRowTop = 0;
+		var endRowTop = subMatrixRank - 1;
+		var beginRowBottom = endRowTop + 1;
+		var endRowBottom = rank - 1; 
+
+		for (var col = beginCol; col <= endCol; col++) {
+			for (var topRow = beginRowTop, bottomRow = beginRowBottom; topRow <= endRowTop; topRow++, bottomRow++) {
+				if (topRow == endCol + 1) {
+					//tblResult.rows[topRow].cells[col+1].style.backgroundColor = "orange";
+					//tblResult.rows[bottomRow].cells[col+1].style.backgroundColor = "orange";
+					swapCellText(tblResult.rows[topRow].cells[col+1], tblResult.rows[bottomRow].cells[col+1]);
+				}
+				else {
+					//tblResult.rows[topRow].cells[col].style.backgroundColor = "orange";
+					//tblResult.rows[bottomRow].cells[col].style.backgroundColor = "orange";
+					swapCellText(tblResult.rows[topRow].cells[col], tblResult.rows[bottomRow].cells[col]);
+				}
+			}
+		}
+	}
+}
+
+function OddSubMatrixBuilder(tblResult, rank) {
+	this.fillNumbersTest = function(startRow, startCol, initNum) {
+		var endRow = startRow + rank - 1;
+		var endCol = startCol + rank - 1;
+		for (var row = startRow; row <= endRow; row++) {
+			for (var col = startCol; col <= endCol; col++) {
+				tblResult.rows[row].cells[col].innerText = initNum++;
+			}
+		}
+	};
+
+	this.fillNumbers = function(startRow, startCol, initNum) {
+		var lastNum = initNum + rank * rank - 1;
+		var outX = startRow + rank; 
+		var outY = startCol + rank;
+		var curX = outX - 1;
+		var curY = startCol + Math.floor(rank / 2);
+	  
+		for (var curNum = initNum; curNum<=lastNum; curNum++) {	
+			tblResult.rows[curX].cells[curY].innerText = curNum;
+			curX++; curY++;
+			if (curX == outX && curY == outY) {
+				curX -= 2; curY--;
+			}
+			else if (curX == outX)
+				curX = startRow;
+			else if (curY == outY)
+				curY = startCol;
+			else if (tblResult.rows[curX].cells[curY].innerText != "") {
+				curX -= 2; curY--;
+			}
+		}
+	};
+}
+
+</script>
+</body>
+</html> 

@@ -1,0 +1,74 @@
+<html>
+<head>
+<title>BuddhaBrot using Javascript</title>
+</head>
+<body>
+<canvas id="brotCanvas" width="600" height="450"></canvas>
+<script>
+const canvas = document.getElementById('brotCanvas');
+const ctx = canvas.getContext('2d');
+const width = canvas.width;
+const height = canvas.height;
+
+// Parameters for detail and performance
+const maxIter = 500; 
+const samplesPerFrame = 50000;
+
+// Buffer to store hit counts for each pixel
+const exposure = new Float32Array(width * height);
+let maxExposure = 0;
+
+function render() {
+    for (let i = 0; i < samplesPerFrame; i++) {
+        // 1. Pick a random point in the complex plane
+        let x0 = Math.random() * 3.0 - 2.0;
+        let y0 = Math.random() * 2.0 - 1.0;
+
+        // 2. Track the orbit path
+        let x = 0, y = 0;
+        let iteration = 0;
+        let path = [];
+
+        while (x*x + y*y <= 4 && iteration < maxIter) {
+            let xTemp = x*x - y*y + x0;
+            y = 2*x*y + y0;
+            x = xTemp;
+            path.push({x, y});
+            iteration++;
+        }
+
+        // 3. If it escapes, it contributes to the Buddha Brot
+        if (iteration < maxIter) {
+            for (let p of path) {
+                let px = Math.floor((p.x + 2.0) / 3.0 * width);
+                let py = Math.floor((p.y + 1.0) / 2.0 * height);
+
+                if (px >= 0 && px < width && py >= 0 && py < height) {
+                    let idx = py * width + px;
+                    exposure[idx]++;
+                    if (exposure[idx] > maxExposure) maxExposure = exposure[idx];
+                }
+            }
+        }
+    }
+
+    // 4. Draw the density map to the canvas
+    const imgData = ctx.createImageData(width, height);
+    for (let i = 0; i < exposure.length; i++) {
+        // Logarithmic scaling for better contrast and detail
+        let val = Math.log1p(exposure[i]) / Math.log1p(maxExposure) * 255;
+        let pixelIdx = i * 4;
+        imgData.data[pixelIdx] = val;     // Red
+        imgData.data[pixelIdx + 1] = val; // Green
+        imgData.data[pixelIdx + 2] = val; // Blue
+        imgData.data[pixelIdx + 3] = 255; // Alpha
+    }
+    ctx.putImageData(imgData, 0, 0);
+    
+    requestAnimationFrame(render);
+}
+
+render();
+</script>
+</body>
+</html>
