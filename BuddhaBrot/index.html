@@ -40,14 +40,18 @@ function render() {
         // 3. If it escapes, it contributes to the Buddha Brot
         if (iteration < maxIter) {
 			for (let p of path) {
-				// 1. Rotate the point 90 degrees clockwise: (x, y) -> (y, -x)
+				// 1. Rotate 90 deg clockwise: (x, y) -> (y, -x)
 				let rotX = p.y;
 				let rotY = -p.x;
 
-				// 2. Map the rotated point to pixel coordinates. 
-				// The range for p.y was [-1, 1], so rotX is now in [-1, 1].
-				// The range for p.x was [-2, 1], so rotY is now in [-1, 2].
+				// 2. Map to Canvas Coordinates
+				// Original X range was [-2, 1] (width 3), now mapped to Y (height)
+				// Original Y range was [-1, 1] (width 2), now mapped to X (width)
+				
+				// Horizontal mapping: rotX is in [-1, 1], so center it at 0.5 and scale by width
 				let px = Math.floor((rotX + 1.0) / 2.0 * width);
+				
+				// Vertical mapping: rotY is in [-1, 2], so shift by 1 to get [0, 3] and scale by height
 				let py = Math.floor((rotY + 1.0) / 3.0 * height);
 
 				if (px >= 0 && px < width && py >= 0 && py < height) {
