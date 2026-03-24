@@ -39,16 +39,23 @@ function render() {
 
         // 3. If it escapes, it contributes to the Buddha Brot
         if (iteration < maxIter) {
-            for (let p of path) {
-                let px = Math.floor((p.x + 2.0) / 3.0 * width);
-                let py = Math.floor((p.y + 1.0) / 2.0 * height);
+			for (let p of path) {
+				// 1. Rotate the point 90 degrees clockwise: (x, y) -> (y, -x)
+				let rotX = p.y;
+				let rotY = -p.x;
 
-                if (px >= 0 && px < width && py >= 0 && py < height) {
-                    let idx = py * width + px;
-                    exposure[idx]++;
-                    if (exposure[idx] > maxExposure) maxExposure = exposure[idx];
-                }
-            }
+				// 2. Map the rotated point to pixel coordinates. 
+				// The range for p.y was [-1, 1], so rotX is now in [-1, 1].
+				// The range for p.x was [-2, 1], so rotY is now in [-1, 2].
+				let px = Math.floor((rotX + 1.0) / 2.0 * width);
+				let py = Math.floor((rotY + 1.0) / 3.0 * height);
+
+				if (px >= 0 && px < width && py >= 0 && py < height) {
+					let idx = py * width + px;
+					exposure[idx]++;
+					if (exposure[idx] > maxExposure) maxExposure = exposure[idx];
+				}
+			}
         }
     }
 
