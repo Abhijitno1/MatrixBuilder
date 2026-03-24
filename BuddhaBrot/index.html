@@ -3,7 +3,7 @@
 <title>BuddhaBrot using Javascript</title>
 </head>
 <body>
-<canvas id="brotCanvas" width="600" height="450"></canvas>
+<canvas id="brotCanvas" width="800" height="900"></canvas>
 <script>
 const canvas = document.getElementById('brotCanvas');
 const ctx = canvas.getContext('2d');
@@ -40,27 +40,34 @@ function render() {
         // 3. If it escapes, it contributes to the Buddha Brot
         if (iteration < maxIter) {
 			for (let p of path) {
-				// 1. Rotate 90 deg clockwise: (x, y) -> (y, -x)
-				let rotX = p.y;
-				let rotY = -p.x;
+				// 1. Rotate 90° clockwise in a way that respects Canvas's top-down Y axis:
+				// We want the original negative X (the head) to be at the top (low Y).
+				// We want the original Y to become the new X.
+				let rotX = p.y;   
+				let rotY = -p.x;  
 
 				// 2. Map to Canvas Coordinates
-				// Original X range was [-2, 1] (width 3), now mapped to Y (height)
-				// Original Y range was [-1, 1] (width 2), now mapped to X (width)
+				// rotX (from original Y) is in range [-1.1, 1.1] -> Use width 2.2
+				// rotY (from original -X) is in range [-1.1, 2.1] -> Use height 3.2
 				
-				// Horizontal mapping: rotX is in [-1, 1], so center it at 0.5 and scale by width
-				let px = Math.floor((rotX + 1.0) / 2.0 * width);
+				// Horizontal: Center the 2.2-unit range
+				let px = Math.floor((rotX + 1.1) / 2.2 * width);
 				
-				// Vertical mapping: rotY is in [-1, 2], so shift by 1 to get [0, 3] and scale by height
-				let py = Math.floor((rotY + 1.0) / 3.0 * height);
+				// Vertical: Center the 3.2-unit range 
+				// This puts p.x = -2.0 at rotY = 2.0 (bottom) 
+				// WAIT: To put the head (x = -0.1) at the TOP, we need high X to be low Y.
+				// Let's use: py = (p.x + 1.1) / 3.2 * height; 
+				// This maps x = -2.0 (bottom of set) to bottom of canvas and x = 1.0 to top.
+				
+				// FINAL CORRECT MAPPING:
+				let py = Math.floor((p.x + 2.1) / 3.2 * height); 
 
 				if (px >= 0 && px < width && py >= 0 && py < height) {
 					let idx = py * width + px;
 					exposure[idx]++;
 					if (exposure[idx] > maxExposure) maxExposure = exposure[idx];
 				}
-			}
-        }
+			}        }
     }
 
     // 4. Draw the density map to the canvas
